@@ -50,7 +50,7 @@ export class Modal extends PureComponent {
         onClick={this.handleOverlayClick}
       >
         <div className={css.modal}>
-          {this.props.url && this.state.open && <img src={this.props.url} />}
+          {this.props.url && this.state.open && <img src={this.props.url} alt={} />}
         </div>
       </div>
     );
