@@ -20,10 +20,11 @@ export class App extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.page !== prevState.page) {
+    if (
+      this.state.page !== prevState.page ||
+      this.state.query !== prevState.query
+    ) {
       this.searchImages();
-    } else if (this.state.query !== prevState.query) {
-      this.searchImages(true);
     }
   }
 
@@ -46,7 +47,13 @@ export class App extends Component {
     }));
   };
 
-  async searchImages(clean) {
+  handleModalClose = () => {
+    this.setState({
+      modalOpen: false,
+    });
+  };
+
+  async searchImages() {
     this.setState({
       loadMore: false,
       loading: true,
@@ -57,14 +64,8 @@ export class App extends Component {
       const images = await searchImages(this.state.query, this.state.page);
 
       this.setState(prev => {
-        let updatedImages = [...prev.images, ...images.hits];
-
-        if (clean) {
-          updatedImages = images.hits;
-        }
-
         return {
-          images: updatedImages,
+          images: [...prev.images, ...images.hits],
           loadMore: this.state.page < Math.ceil(images.total / 12),
         };
       });
@@ -100,7 +101,13 @@ export class App extends Component {
         )}
 
         <Loader visible={this.state.loading} />
-        <Modal open={this.state.modalOpen} url={this.state.modalUrl} />
+        {this.state.modalOpen && (
+          <Modal
+            open={this.state.modalOpen}
+            url={this.state.modalUrl}
+            onClose={this.handleModalClose}
+          />
+        )}
       </div>
     );
   }
