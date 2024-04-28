@@ -18,7 +18,7 @@ export class Modal extends PureComponent {
 
   handleEsc = event => {
     if (event.keyCode === 27) {
-      this.handleOverlayClick();
+      this.props.onClose();
     }
   };
 
